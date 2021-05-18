@@ -1,0 +1,20 @@
+version: '3.5'
+
+x-cache-from:
+  - &api-cache-from
+    cache_from:
+      - ${NGINX_IMAGE:-quay.io/api-platform/nginx}
+services:
+    frontend:
+        container_name: frontend
+        restart: always
+        build:
+          context: .
+          target: frontend_development
+        tty: true # https://github.com/facebook/create-react-app/issues/8688
+        volumes:
+          - .:/usr/src/frontend:rw,cached
+        ports:
+          - target: 3000
+            published: 3000
+            protocol: tcp
